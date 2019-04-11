@@ -1,45 +1,49 @@
-DROP TABLE IF EXISTS country;
 
-CREATE TABLE IF NOT EXISTS country (
-  ID CHAR(3) NOT NULL DEFAULT '',
-  TheName CHAR(52) NOT NULL DEFAULT '',
-  Population INT(11) NOT NULL DEFAULT '0',
-  SurfaceArea FLOAT(10,2) NOT NULL DEFAULT '0.00',
-  Continent enum('Asia','Europe', 'North America','South America','Africa','Australia','Antarctica') NOT NULL DEFAULT 'Europe',
-  PRIMARY KEY (ID)
-); 
+-- Import the database **new_world** (using the new_world.sql-file), 
 
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 1,'China', 1418966824, 9706961,'Asia');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 2,'India', 1365521538, 3287590,'Asia');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 3,'USA', 328586390, 9372610,'North America');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 4,'Indonesia', 268933842, 1904569,'Asia');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 5,'Brazil', 212058797, 8515767,'South America');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 6,'Pakistan', 203765739, 881912,'Asia');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 7,'Nigeria', 199845937, 923768,'Africa');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 8,'Bangladesh', 167691040, 147570 ,'Asia');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 9,'Russia', 	143909539, 17098242,'Asia');
-INSERT INTO country (ID, TheName, Population, SurfaceArea, Continent) VALUES ( 10,'Mexico', 131984835, 1964375,'South America');
+source new_world.sql;
+use new_world;
 
-DROP TABLE IF EXISTS city;
+-- 1. What are the names of countries with population greater than 8 million
+SELECT Name, Population FROM country WHERE Population > 8000000;
 
-CREATE TABLE IF NOT EXISTS city (
-  CityID char(3) NOT NULL  DEFAULT '',
-  TheName CHAR(35) NOT NULL DEFAULT '',
-  Country CHAR(20) NOT NULL DEFAULT '',
-  CountryCode CHAR(3) NOT NULL DEFAULT '',
-  Population INT(11) NOT NULL DEFAULT '0',
-  
-  PRIMARY KEY (CityID)
-); 
+-- 2. What are the names of countries that have “land” in their names ?
+SELECT Name FROM country WHERE Name LIKE "%land%";
 
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (1,'Shanghai','China','CHN',24153000);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (2,'Beijing','China','CHN',18590000);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (3,'Karachi','Pakistan','PAK',18000000);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (4,'Istanbul','Turkey','TUR',14657000);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (5,'Dhaka','Bangladesh','BGD',14543000);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (6,'Tokyo','Japan','JPN',13617000);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (7,'Moscow','Russia','RUS',13197596);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (8,'Manila','Russia','RUS',12877000);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (9,'Tianjin','China','CHN',12784000);
-INSERT INTO city (CityID, TheName, Country,CountryCode,Population) VALUES (10,'Mumbai','India','IND',12400000);
+-- 3. What are the names of the cities with population in between 500,000 and 1 million ?
+SELECT Name, Population FROM city WHERE ((Population > 500000) and (Population < 1000000));
+
+-- 4. What's the name of all the countries on the continent ‘Europe’ ?
+SELECT Name FROM country WHERE continent = 'Europe';
+
+
+-- 5. List all the countries in the descending order of their surface areas.
+SELECT Name FROM country ORDER BY SurfaceArea DESC;
+
+
+
+-- bonus queries
+
+-- 6. What are the names of all the cities in the Netherlands?
+SELECT city.Name FROM country JOIN city ON city.CountryCode = country.Code WHERE country.Name LIKE "Netherlands";
+
+-- 7. What is the population of Rotterdam ?
+SELECT population FROM CITY WHERE Name = "Rotterdam";
+
+-- 8. What's the top 10 countries by Surface Area ?
+SELECT Name FROM country ORDER BY surfaceArea DESC LIMIT 10;
+
+-- 9. What's the top 10 most populated cities?
+SELECT Name FROM city ORDER BY population DESC LIMIT 10;
+
+-- 10. What is the population of the world ?
+SELECT SUM(Population) FROM country;
+
+
+ 
+
+
+
+
+
 
